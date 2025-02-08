@@ -9,6 +9,7 @@ export class Event extends Model {
   public name!: string; // this the event name
   public totalTickets!: number; 
   public availableTickets!: number; 
+  public ticketStatus!: string;
   public readonly createdAt!: Date; 
   public readonly updatedAt!: Date; 
 }
@@ -39,6 +40,7 @@ export const initializeEventModel = (sequelize: Sequelize): typeof Event => {
             args: [1], msg: 'Total tickets must be at least 1.',  }, },
 
       },
+      
       availableTickets: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -52,7 +54,18 @@ export const initializeEventModel = (sequelize: Sequelize): typeof Event => {
           },
         },
       },
+    ticketStatus: {
+      type: DataTypes.ENUM('open', 'cancelled', 'booked', 'on-hold', 'reassigned'),
+      allowNull: false,
+      defaultValue: 'open',
+      validate: {
+        isIn: {
+          args: [['open', 'cancelled', 'booked', 'on-hold', 'reassigned']],
+          msg: 'Invalid ticket status.',
+        },
+      },
     },
+  },
     {
       sequelize,
       modelName: 'Event',

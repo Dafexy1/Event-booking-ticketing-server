@@ -3,11 +3,13 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 export class User extends Model {
   public id!: number;
   public email!: string; 
+  public ticketsPurchased!: string[]; // Array to store ticket IDs or event IDs
+  public ticketStatus!: Record<string, string>; 
   public createdAt!: Date;
   public updatedAt!: Date;
 }
 
-export const initializeUserModel = (sequelize: Sequelize) => {
+export const initializeUserModel = (sequelize: Sequelize): typeof User => {
   User.init(
     {
       id: {
@@ -22,7 +24,17 @@ export const initializeUserModel = (sequelize: Sequelize) => {
         validate: {
           isEmail: true, // Validates email format
         },
-      },
+    },
+    ticketsPurchased: {
+            type: DataTypes.ARRAY(DataTypes.STRING), 
+            allowNull: false,
+            defaultValue: [], 
+          },
+         ticketStatus: {
+            type: DataTypes.JSON, 
+            allowNull: false,
+            defaultValue: {}, 
+          },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -40,5 +52,5 @@ export const initializeUserModel = (sequelize: Sequelize) => {
       tableName: 'users',
     }
   );
-
+    return User;
 };

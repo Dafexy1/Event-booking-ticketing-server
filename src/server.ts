@@ -2,11 +2,13 @@ import dotenv from "dotenv";
 dotenv.config();
 import app from "./eventCore";
 // import connectDB from "./database/database";
-import connectSql from "./database/sequelize";
+import { connectSql } from "./database/sequelize";
+
 
 
 // connectDB()
 connectSql()
+
 
 
 
@@ -17,5 +19,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 API Gateway running on http://localhost:${PORT}`);
+  console.log(`API Gateway running on http://localhost:${PORT}`);
 });
