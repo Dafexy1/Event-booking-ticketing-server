@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { limiter } from '../middleware/rateLimtter';
+import { concurrencyHandler } from '../middleware/handleConcurrency';
 import { createUserController, getAllUsersController, 
   purchaseTicketController, cancelTicketController, getUserByIdController } from "../controller/userController";
 import { createEventController, getAllEventsController, getWaitingListController, 
@@ -17,7 +19,7 @@ router.get("/", (req, res) => {
 // User routes
 router.post("/users", createUserController);
 router.get("/users", getAllUsersController);
-router.post("/users/purchase-ticket", purchaseTicketController);
+router.post("/users/purchase-ticket", limiter, concurrencyHandler, purchaseTicketController);
 router.post("/users/cancel-ticket", cancelTicketController);
 router.get('/users/:id', getUserByIdController);
 

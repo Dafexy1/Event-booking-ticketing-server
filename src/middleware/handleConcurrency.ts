@@ -10,7 +10,7 @@ import { sequelize } from '../database/sequelize';
 /**
  * Middleware to handle concurrent ticket purchases.
  */
-export const ticketPurchaseConcurrencyHandler = async ( req: Request, res: Response, next: NextFunction) => {
+export const concurrencyHandler = async ( req: any, res: any, next: NextFunction) => {
   const { eventId, ticketsToPurchase } = req.body;
 
   if (!eventId || !ticketsToPurchase) {
