@@ -20,6 +20,27 @@ PostgreSQL: Used for database management (or any preferred database setup).
  - Set Up Environment Variables Create a .env file in the root directory of the project.
    
 Run Database Migrations Run the migrations to set up the database schema.
+
+
+
+API Documentation: 
+https://documenter.getpostman.com/view/26352346/2sAYX9nL5Q
+
+
+Troubleshooting
+Here are some common issues and how to fix them:
+
+Error: Cannot find module 'sequelize'
+Solution: Make sure you have installed the dependencies correctly by running npm install.
+
+Database connection error
+Solution: Ensure that the PostgreSQL database is running and that the credentials in the .env file are correct.
+
+Port already in use
+Solution: Change the PORT variable in the .env file to another unused port.
+
+Migration errors
+Solution: If you face issues running migrations, ensure the database is correctly set up and the connection details are correct.
 npm run migrate
 This will create necessary tables and associations in the database.
 
