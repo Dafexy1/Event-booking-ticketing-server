@@ -34,9 +34,10 @@ const getWaitingListByEvent = (eventId) => __awaiter(void 0, void 0, void 0, fun
 exports.getWaitingListByEvent = getWaitingListByEvent;
 /**
  * Assigns tickets from the waiting list to users.
- * @param eventId - The ID of the event.
+ * @param eventId - The ID of the event
  * @param newTickets - The number of tickets to assign.
  */
+// this will serve more of like the manual assignment when called
 const assignTicketsFromWaitingList = (eventId, newTickets) => __awaiter(void 0, void 0, void 0, function* () {
     const event = yield eventSchema_2.Event.findByPk(eventId);
     if (!event) {
@@ -61,19 +62,24 @@ const assignTicketsFromWaitingList = (eventId, newTickets) => __awaiter(void 0, 
             user.ticketStatus = {};
         }
         // Assume the userInWaitingList includes the number of tickets requested
-        const ticketsRequested = userInWaitingList.numberOfTickets; // Add `numberOfTickets` to WaitingList schema
-        const ticketsToGive = Math.min(ticketsRequested, ticketsToAssign); // Assign tickets based on availability
+        const ticketsRequested = userInWaitingList.numberOfTickets;
+        // Check if we have enough tickets to fulfill the request
+        const ticketsToGive = Math.min(ticketsRequested, ticketsToAssign);
+        // Ensure available tickets do not go negative
+        if (event.availableTickets - ticketsToGive < 0) {
+            throw new Error("Not enough available tickets to fulfill the request.");
+        }
         // Assign tickets to the user
         for (let i = 0; i < ticketsToGive; i++) {
             const ticketId = `${eventId}-ticket-${event.totalTickets - event.availableTickets + 1}`;
             user.ticketsPurchased.push(ticketId);
             user.ticketStatus[ticketId] = "booked"; // Mark ticket as booked
             ticketsToAssign--;
-            event.availableTickets--;
-            // Update the database for each ticket assignment
-            yield user.save();
-            yield event.save();
+            event.availableTickets--; // Decrease available tickets
         }
+        // Update the database for each ticket assignment
+        yield user.save();
+        yield event.save();
         // If the user receives all the tickets they requested, remove them from the waiting list
         if (ticketsToGive === ticketsRequested) {
             yield userInWaitingList.destroy();
@@ -102,51 +108,7 @@ const addTicketsToEvent = (eventId, newTickets) => __awaiter(void 0, void 0, voi
     yield event.save();
 });
 exports.addTicketsToEvent = addTicketsToEvent;
-// export const assignTicketsFromWaitingList = async (eventId: number) => {
-//   const event = await EventModel.findByPk(eventId);
-//   if (!event) {
-//     throw new Error("Event not found.");
-//   }
-//   const waitingList = await getWaitingListByEvent(eventId);
-//   if (waitingList.length === 0) {
-//     console.log("No users in the waiting list for this event.");
-//     return { message: "No users to assign tickets to." };
-//   }
-//   let ticketsAssigned = 0;
-//   for (const waitingUser of waitingList) {
-//     const { userId } = waitingUser;
-//     if (event.availableTickets > 0) {
-//       const user = await User.findByPk(userId);
-//       if (user) {
-//         if (!Array.isArray(user.ticketsPurchased)) {
-//           user.ticketsPurchased = [];
-//         }
-//         if (!user.ticketStatus) {
-//           user.ticketStatus = {};
-//         }
-//         // Assign a ticket to the user
-//         const ticketId = `${eventId}-ticket-${event.totalTickets - event.availableTickets + 1}`;
-//         user.ticketsPurchased.push(ticketId);
-//         user.ticketStatus[ticketId] = "booked";
-//         // Save user changes
-//         user.changed("ticketsPurchased", true);
-//         user.changed("ticketStatus", true);
-//         await user.save();
-//         // Decrement available tickets for the event
-//         event.availableTickets -= 1;
-//         ticketsAssigned += 1;
-//         await event.save();
-//         // Remove user from waiting list
-//         await waitingUser.destroy();
-//       }
-//     } else {
-//       break; // Stop if no tickets are available
-//     }
-//   }
-//   return {
-//     message: `Assigned ${ticketsAssigned} tickets to users from the waiting list.`,
-//   };
-// };
+// the is an automated function that assigns cancelled tickets to users on the waiting list base on user ticket purchase order
 const cancelTicketAndReassign = (userId, ticketId, eventId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userSchema_1.User.findByPk(userId);
     if (!user) {

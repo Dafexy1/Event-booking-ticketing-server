@@ -6,7 +6,7 @@ const eventController_1 = require("../controller/eventController");
 const router = (0, express_1.Router)();
 // Placeholder Route
 router.get("/", (req, res) => {
-    res.json({ message: "Welcome to SentinelAI API Gateway" });
+    res.json({ message: "Welcome to Event ticket booking API " });
 });
 // User routes
 router.post("/users", userController_1.createUserController);

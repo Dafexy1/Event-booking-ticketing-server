@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const logger_1 = require("./utils/logger");
 const apiRoute_1 = __importDefault(require("./routes/apiRoute"));
+const rateLimtter_1 = require("./middleware/rateLimtter");
 const app = (0, express_1.default)();
 // Middleware
 app.use((0, helmet_1.default)());
@@ -17,5 +18,5 @@ app.use(express_1.default.json());
 app.use((0, logger_1.connectLogger)());
 app.use(body_parser_1.default.json());
 // API Routes
-app.use("/api", apiRoute_1.default);
+app.use("/api", rateLimtter_1.limiter, apiRoute_1.default);
 exports.default = app;

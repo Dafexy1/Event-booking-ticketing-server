@@ -5,8 +5,10 @@ import app from "./eventCore";
 import { connectSql } from "./database/sequelize";
 
 
-
+// this is incase the use of mongodb
 // connectDB()
+
+// this for postgres
 connectSql()
 
 

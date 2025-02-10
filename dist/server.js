@@ -8,7 +8,9 @@ dotenv_1.default.config();
 const eventCore_1 = __importDefault(require("./eventCore"));
 // import connectDB from "./database/database";
 const sequelize_1 = require("./database/sequelize");
+// this is incase the use of mongodb
 // connectDB()
+// this for postgres
 (0, sequelize_1.connectSql)();
 const PORT = parseInt(process.env.PORT || "5000", 10);
 // Root route handler

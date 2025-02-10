@@ -44,28 +44,4 @@ const connectSql = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.connectSql = connectSql;
-// export const connectSql = async () => {
-//   const sqLUri = new Sequelize(
-//     process.env.PG_DATABASE as string,        
-//     process.env.PG_USERNAME as string,        
-//     process.env.PG_PASSWORD as string,    
-//     {
-//       host: process.env.PG_HOST,          
-//       dialect: 'postgres',               
-//       logging: process.env.DB_LOGGING === 'true',
-//     }
-//   );
-//   try {
-//     await sqLUri.authenticate();
-//     console.log('PostgreSQL connected with Sequelize');
-//     initializeEventModel(sqLUri);
-//     initializeUserModel(sqLUri);
-//     initializeBookingModel(sqLUri);
-//     initializeWaitingListModel(sqLUri);
-//     await sqLUri.sync({alter: true});
-//     console.log('Database synced success');
-//   } catch (error) {
-//     console.error('Unable to connect to PostgreSQL:', error);
-//   }
-// };
 // export default connectSql;

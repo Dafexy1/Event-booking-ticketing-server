@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { connectLogger } from "./utils/logger";
 import apiRoute from "./routes/apiRoute";
+import { limiter } from './middleware/rateLimtter';
 
 const app: Application = express();
 
@@ -15,6 +16,6 @@ app.use(connectLogger());
 app.use(bodyParser.json());
 
 // API Routes
-app.use("/api", apiRoute);
+app.use("/api", limiter, apiRoute);
 
 export default app;
